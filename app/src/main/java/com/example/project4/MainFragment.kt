@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +16,10 @@ import com.google.android.material.button.MaterialButton
 
 class MainFragment : Fragment() {
 
-    private lateinit var SendButton: MaterialButton
+    private lateinit var sendButton: MaterialButton
+    private lateinit var authButton: MaterialButton
+    private lateinit var createButton: MaterialButton
+    private lateinit var codeEditText: EditText
     private val apiViewModel: ApiViewModel by viewModels()
 
     override fun onCreateView(
@@ -30,13 +34,26 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.apply {
-            SendButton = findViewById(R.id.SendButton)
+            sendButton = findViewById(R.id.SendButton)
+            authButton = findViewById(R.id.AuthButton)
+            createButton = findViewById(R.id.CreateProfileButton)
+            codeEditText = findViewById(R.id.EmailCodeEditText)
         }
-        SendButton.setOnClickListener(OnSendButtonClickListener)
+        sendButton.setOnClickListener(OnSendButtonClickListener)
+        sendButton.setOnClickListener(OnAuthButtonClickListener)
+        sendButton.setOnClickListener(OnCreateButtonClickListener)
     }
 
     private val OnSendButtonClickListener = OnClickListener {
         apiViewModel.SendCode("malyshkin_04@bk.ru")
+    }
+
+    private val OnAuthButtonClickListener = OnClickListener {
+        apiViewModel.AuthProfile("")
+    }
+
+    private val OnCreateButtonClickListener = OnClickListener {
+        apiViewModel.AuthProfile("")
     }
 
     companion object {

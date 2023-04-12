@@ -20,6 +20,7 @@ class MainFragment : Fragment() {
     private lateinit var authButton: MaterialButton
     private lateinit var createButton: MaterialButton
     private lateinit var codeEditText: EditText
+    private lateinit var emailEditText: EditText
     private val apiViewModel: ApiViewModel by viewModels()
 
     override fun onCreateView(
@@ -38,22 +39,27 @@ class MainFragment : Fragment() {
             authButton = findViewById(R.id.AuthButton)
             createButton = findViewById(R.id.CreateProfileButton)
             codeEditText = findViewById(R.id.EmailCodeEditText)
+            emailEditText = findViewById(R.id.EmailEditText)
         }
         sendButton.setOnClickListener(OnSendButtonClickListener)
-        sendButton.setOnClickListener(OnAuthButtonClickListener)
-        sendButton.setOnClickListener(OnCreateButtonClickListener)
+        authButton.setOnClickListener(OnAuthButtonClickListener)
+        createButton.setOnClickListener(OnCreateButtonClickListener)
     }
 
     private val OnSendButtonClickListener = OnClickListener {
-        apiViewModel.SendCode("malyshkin_04@bk.ru")
+        apiViewModel.SendCode(emailEditText.text.toString())
     }
 
     private val OnAuthButtonClickListener = OnClickListener {
-        apiViewModel.AuthProfile("")
+        if(emailEditText.text!=null && codeEditText.text!=null){
+            val data = EmailData(emailEditText.text.toString(),
+                codeEditText.text.toString())
+                apiViewModel.AuthProfile(data)
+        }
     }
 
     private val OnCreateButtonClickListener = OnClickListener {
-        apiViewModel.AuthProfile("")
+        //apiViewModel.AuthProfile("")
     }
 
     companion object {

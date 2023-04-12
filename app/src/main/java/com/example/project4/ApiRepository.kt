@@ -4,6 +4,8 @@ import android.util.Log
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 
 class ApiRepository {
@@ -12,6 +14,7 @@ class ApiRepository {
         { it.toRequestBody("application/json; charset=utf-8".toMediaType()) }
 
     private val client = OkHttpClient()
+    private val accept = "application/json"
 
     fun sendCode(data: String, callback: (Boolean) -> Unit) {
 
@@ -21,8 +24,8 @@ class ApiRepository {
             .addPathSegments("api/sendCode")
             .build()
 
-        val request = Request.Builder().post(dataToRequestBody("")).addHeader("email", "malyshkin_04@bk.ru")
-            .addHeader("accept", "application/json").url(url).build()
+        val request = Request.Builder().post(dataToRequestBody("")).addHeader("email", data)
+            .addHeader("accept", accept).url(url).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -43,7 +46,10 @@ class ApiRepository {
         })
     }
 
-    fun AuthProfile(data: String, callback: (Boolean) -> String) {
+    fun AuthProfile(data: EmailData, callback: (Boolean) -> String) {
+
+        val email = data.email
+        val code = data.code
 
         val url = HttpUrl.Builder()
             .scheme("https")
@@ -52,9 +58,9 @@ class ApiRepository {
             .build()
 
         val request = Request.Builder().post(dataToRequestBody(""))
-            .addHeader("accept","application/json")
-            .addHeader("email","malyshkin_04@bk.ru")
-            .addHeader("code","7883")
+            .addHeader("accept",accept)
+            .addHeader("email",email)
+            .addHeader("code",code)
             .url(url).build()
 
         client.newCall(request).enqueue(object:Callback{
